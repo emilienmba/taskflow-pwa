@@ -1,0 +1,5 @@
+<div class="task-item">
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.description }}</p>
+    <button (click)="delete.emit(task.id)">Delete</button>
+</div>

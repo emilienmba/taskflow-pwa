@@ -1,0 +1,7 @@
+<div class="task-list">
+    @for (task of tasks; track task.id) {
+    <app-task-item [task]="task" (delete)="deleteTask(task.id)"></app-task-item>
+    } @empty {
+    <p>No tasks found. Add a new task!</p>
+    }
+</div>
