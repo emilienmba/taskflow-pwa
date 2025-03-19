@@ -1,1 +1,184 @@
-/* You can add global styles to this file, and also import other style files */
+// src/styles.scss
+@import 'bootstrap/scss/bootstrap';
+* {
+    font-family: 'Poppins';
+}
+
+// .task-list {
+//     transition: all 0.3s ease;
+// }
+// .task-item {
+//     transition: all 0.3s ease;
+// }
+// /* Dark Theme */
+// .dark-theme {
+//     --bg-primary: #121212;
+//     --bg-secondary: #1e1e1e;
+//     --text-primary: #e0e0e0;
+//     --text-secondary: #a0a0a0;
+//     --card-bg: #2d2d2d;
+//     --border-color: #444;
+//     background-color: var(--bg-primary);
+//     color: var(--text-primary);
+//     .card {
+//         background-color: var(--card-bg);
+//         border-color: var(--border-color);
+//         color: var(--text-primary);
+//     }
+//     .card-header {
+//         background-color: rgba(0, 0, 0, 0.2);
+//         border-color: var(--border-color);
+//     }
+//     .form-control,
+//     .form-select {
+//         background-color: var(--bg-secondary);
+//         border-color: var(--border-color);
+//         color: var(--text-primary);
+//         &:focus {
+//             background-color: var(--bg-secondary);
+//             color: var(--text-primary);
+//         }
+//     }
+//     .text-muted {
+//         color: var(--text-secondary) !important;
+//     }
+//     .list-group-item {
+//         background-color: var(--card-bg);
+//         border-color: var(--border-color);
+//         color: var(--text-primary);
+//     }
+//     .alert-info {
+//         background-color: #193c5a;
+//         color: #9ccef4;
+//         border-color: #144a77;
+//     }
+//     .alert-warning {
+//         background-color: #594816;
+//         color: #ffd04e;
+//         border-color: #7a5f1a;
+//     }
+//     .btn-close {
+//         filter: invert(1);
+//     }
+// }
+// Dark theme styles
+body.dark-theme {
+    background-color: #212529;
+    color: #f8f9fa;
+    .container-fluid.bg-light {
+        background-color: #212529 !important;
+    }
+    header,
+    .card,
+    footer {
+        background-color: #343a40 !important;
+        color: #f8f9fa;
+    }
+    .card {
+        background: linear-gradient(145deg, #343a40, #2b3035);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    .nav-tabs {
+        .nav-link {
+            background-color: rgba(255, 255, 255, 0.1);
+            &:hover {
+                background-color: rgba(13, 110, 253, 0.2);
+            }
+            &.active {
+                background-color: var(--bs-primary);
+                color: white;
+            }
+        }
+    }
+    .alert-warning {
+        background-color: #2c2a18;
+        color: #ffc107;
+        border-color: #554800;
+    }
+    .task-list-container {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+    .task-list-header {
+        .task-list-title {
+            color: #f8f9fa;
+        }
+        .title-separator {
+            background-color: #495057;
+        }
+    }
+    .filter-section,
+    .sort-section {
+        .section-title {
+            color: #adb5bd;
+        }
+    }
+    .btn-filter,
+    .btn-sort {
+        background-color: #495057;
+        border-color: #6c757d;
+        color: #f8f9fa;
+        &:hover {
+            background-color: #6c757d;
+        }
+        &.active {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+    }
+    .search-container {
+        .search-input {
+            background-color: #495057;
+            border-color: #6c757d;
+            color: #f8f9fa;
+            &:focus {
+                border-color: var(--bs-primary);
+            }
+        }
+        .btn-clear-search {
+            color: #f8f9fa;
+            &:hover {
+                color: var(--bs-primary);
+            }
+        }
+    }
+    .task-list {
+        &::-webkit-scrollbar-track {
+            background: #495057;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #6c757d;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            background: #adb5bd;
+        }
+    }
+    .no-tasks-message {
+        color: #adb5bd;
+    }
+    .task-item-card {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+    .task-checkbox {
+        .form-check-label {
+            color: #f8f9fa;
+            &.completed {
+                color: #adb5bd;
+            }
+        }
+    }
+    .task-description {
+        color: #adb5bd;
+    }
+    .task-footer {
+        color: #adb5bd;
+    }
+    .alert-container {
+        .alert {
+            background-color: #495057;
+            color: #f8f9fa;
+            border-color: #6c757d;
+        }
+    }
+}

@@ -1,11 +1,15 @@
-import { ApplicationConfig } from '@angular/core';
+// src/app/app.config.ts
+import { ApplicationConfig, isDevMode } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideRouter(routes),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: true, // Enable the service worker in production
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
-  ],
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    })
+  ]
 };

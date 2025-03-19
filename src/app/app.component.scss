@@ -1,0 +1,96 @@
+$primary-light: rgba(13, 110, 253, 0.1);
+$transition-speed: 0.3s;
+// Enhanced styles for TaskFlow
+.container-fluid.bg-light {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Prend toute la hauteur de la vue
+}
+
+// Header enhancements
+header {
+    transition: box-shadow $transition-speed ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    .fa-check-square-o {
+        color: var(--bs-primary);
+    }
+}
+
+// Card enhancements
+.card {
+    transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    &:hover {
+        // transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .card-header {
+        background: linear-gradient(to right, white, $primary-light);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+// Button style enhancements
+.btn-outline-secondary,
+.btn-primary {
+    transition: all $transition-speed ease;
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Tabs styling
+.nav-tabs {
+    border-bottom: none;
+    .nav-link {
+        border: none;
+        border-radius: 2rem;
+        padding: 0.75rem 1.5rem;
+        margin: 0 0.5rem;
+        // color: #6c757d;
+        font-weight: 500;
+        transition: all $transition-speed ease;
+        // background-color: rgba(0, 0, 0, 0.05);
+        color: var(--bs-primary);
+        background-color: rgba(13, 110, 253, 0.1);
+        &:hover {
+            color: var(--bs-primary);
+            background-color: rgba(13, 110, 253, 0.2);
+        }
+        &.active {
+            color: white;
+            background-color: var(--bs-primary);
+            box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+        }
+    }
+}
+
+// Responsive tweaks
+@media (max-width: 992px) {
+    .card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+// Animations for task items (to be applied to task-list items)
+.task-item {
+    transition: all $transition-speed ease;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    &:hover {
+        background-color: $primary-light;
+        transform: translateX(5px);
+    }
+    &.completed {
+        text-decoration: line-through;
+        opacity: 0.7;
+    }
+}

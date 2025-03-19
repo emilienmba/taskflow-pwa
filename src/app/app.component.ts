@@ -1,59 +1,81 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { Task } from './core/models/task.model';
-import { TaskService } from './core/services/task.service';
-import { TaskFormComponent } from './features/task-form/task-form.component';
-import { TaskListComponent } from './features/task-list/task-list.component';
-;
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { filter } from 'rxjs/operators';
+import { ThemeService } from './core/services/theme.service';
+import { TaskFormComponent } from './features/tasks/components/task-form/task-form.component';
+import { TaskListComponent } from './features/tasks/components/task-list/task-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, TaskFormComponent, TaskListComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    TaskListComponent,
+    TaskFormComponent
+  ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  showInstallButton = false; // Whether to show the install button
-  private deferredPrompt: any; // Stores the PWA install prompt
+  updateAvailable = false;
+  isOnline = true; // Default to true, will be updated in setupConnectivityMonitoring
+
+  private themeService = inject(ThemeService);
+  isDarkTheme = false;
 
   constructor(
-    private taskService: TaskService,
+    private swUpdate: SwUpdate,
     @Inject(PLATFORM_ID) private platformId: Object // Inject PLATFORM_ID to check the environment
   ) {
-    // Only add the event listener if running in a browser
-    if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        this.deferredPrompt = event;
-        this.showInstallButton = true;
+    this.setupServiceWorkerUpdates();
+    this.setupConnectivityMonitoring();
+    
+    this.themeService.theme$.subscribe(theme => {
+      this.isDarkTheme = theme === 'dark';
+    });
+  }
+
+  /**
+   * Sets up service worker update notifications
+   */
+  private setupServiceWorkerUpdates(): void {
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.versionUpdates.pipe(
+        filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY')
+      ).subscribe(() => {
+        this.updateAvailable = true;
       });
     }
   }
 
   /**
-   * Handles the installation of the PWA.
+   * Monitors device online/offline status
    */
-  installPwa(): void {
-    if (this.deferredPrompt) {
-      this.deferredPrompt.prompt();
-      this.deferredPrompt.userChoice.then((choiceResult: any) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the install prompt');
-        } else {
-          console.log('User dismissed the install prompt');
-        }
-        this.deferredPrompt = null;
-        this.showInstallButton = false;
+  private setupConnectivityMonitoring(): void {
+    if (isPlatformBrowser(this.platformId)) { // Check if running in a browser
+      this.isOnline = navigator.onLine; // Set initial online status
+
+      window.addEventListener('online', () => {
+        this.isOnline = true;
+      });
+      
+      window.addEventListener('offline', () => {
+        this.isOnline = false;
       });
     }
   }
 
   /**
-   * Handles adding a new task.
-   * @param task - The task to add.
+   * Updates the application when a new version is available
    */
-  onAddTask(task: Task): void {
-    this.taskService.addTask(task);
+  updateApp(): void {
+    this.swUpdate.activateUpdate().then(() => document.location.reload());
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 }

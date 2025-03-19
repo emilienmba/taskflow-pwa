@@ -1,8 +1,80 @@
-<div class="container">
-    <h1>TaskFlow PWA</h1>
-    <button *ngIf="showInstallButton" (click)="installPwa()">Install TaskFlow</button>
-    <app-task-form (addTask)="onAddTask($event)"></app-task-form>
-    <app-task-list></app-task-list>
-</div>
+<div class="container-fluid bg-light min-vh-100 p-0 d-flex flex-column">
+    <!-- Fixed header with shadow for better separation -->
+    <header class="bg-white shadow-sm py-3 mb-4 sticky-top">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <!-- Logo and brand name with better styling -->
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-check-square-o fa-2x me-2 text-primary"></i>
+                    <span class="fs-4 fw-bold">TaskFlow</span>
+                </div>
 
-<!-- <router-outlet /> -->
+                <!-- Right-aligned controls -->
+                <div class="ms-auto d-flex align-items-center">
+                    <!-- Theme toggle button -->
+                    <button class="btn btn-sm btn-outline-secondary me-2 rounded-pill" (click)="toggleTheme()">
+                        <i class="fa" [ngClass]="isDarkTheme ? 'fa-sun-o' : 'fa-moon-o'"></i>
+                        <span class="ms-1 d-none d-md-inline">{{ isDarkTheme ? 'Light' : 'Dark' }} Mode</span>
+                    </button>
+
+                    <!-- Update button - only shown when updates are available -->
+                    @if (updateAvailable) {
+                    <button class="btn btn-sm btn-primary rounded-pill" (click)="updateApp()">
+                            <i class="fa fa-refresh me-1"></i>
+                            <span>Update</span>
+                        </button> }
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <div class="container py-3 flex-grow-1">
+        <!-- Offline warning message -->
+        @if (!isOnline) {
+        <div class="alert alert-warning rounded-3 shadow-sm mb-4">
+            <i class="fa fa-wifi me-2"></i> You are currently offline. Some features may be limited.
+        </div>
+        }
+
+        <!-- Tabs for navigation -->
+        <nav>
+            <div class="nav nav-tabs mb-4" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-tasks-tab" data-bs-toggle="tab" data-bs-target="#nav-tasks" type="button" role="tab" aria-controls="nav-tasks" aria-selected="true">
+                    <i class="fa fa-list me-2"></i> Your Tasks
+                </button>
+                <button class="nav-link" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#nav-add" type="button" role="tab" aria-controls="nav-add" aria-selected="false">
+                    <i class="fa fa-plus-circle me-2"></i> Add Task
+                </button>
+            </div>
+        </nav>
+
+        <!-- Tab content -->
+        <div class="tab-content" id="nav-tabContent">
+            <!-- Task list -->
+            <div class="tab-pane fade show active" id="nav-tasks" role="tabpanel" aria-labelledby="nav-tasks-tab">
+                <div class="card shadow-lg rounded-4 border-0">
+                    <div class="card-body p-0">
+                        <task-list></task-list>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task form -->
+            <div class="tab-pane fade" id="nav-add" role="tabpanel" aria-labelledby="nav-add-tab">
+                <div class="card shadow-lg rounded-4 border-0">
+                    <div class="card-body p-4">
+                        <task-form></task-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple footer -->
+    <footer class="bg-white mt-auto py-3">
+        <div class="container text-center text-muted">
+            <small>TaskFlow PWA &copy; 2025</small>
+        </div>
+    </footer>
+</div>

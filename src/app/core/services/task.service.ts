@@ -1,51 +1,123 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+// src/app/features/tasks/services/task.service.ts
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Task } from '../models/task.model';
 
 @Injectable({
-  providedIn: 'root', // Provided at the root level for singleton usage
+  providedIn: 'root'
 })
 export class TaskService {
-  private tasks: Task[] = []; // Local storage for tasks
-  private tasksSubject = new BehaviorSubject<Task[]>(this.tasks); // Observable for tasks
+  // Using signals for reactive data management (Angular 18 feature)
+  private tasksSignal = signal<Task[]>([]);
+  
+  // Using BehaviorSubject for observable pattern
+  private tasksSubject = new BehaviorSubject<Task[]>([]);
+  tasks$ = this.tasksSubject.asObservable();
 
-  constructor() {}
-
-  /**
-   * Returns an observable of the tasks.
-   */
-  getTasks(): Observable<Task[]> {
-    return this.tasksSubject.asObservable();
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.loadFromLocalStorage();
   }
 
   /**
-   * Adds a new task to the list.
-   * @param task - The task to add.
+   * Loads tasks from localStorage on service initialization
    */
-  addTask(task: Task): void {
-    task.id = this.tasks.length + 1; // Generate a unique ID
-    this.tasks.push(task);
-    this.tasksSubject.next(this.tasks); // Emit the updated list
-  }
-
-  /**
-   * Updates an existing task.
-   * @param updatedTask - The task with updated properties.
-   */
-  updateTask(updatedTask: Task): void {
-    const index = this.tasks.findIndex((t) => t.id === updatedTask.id);
-    if (index !== -1) {
-      this.tasks[index] = updatedTask;
-      this.tasksSubject.next(this.tasks); // Emit the updated list
+  private loadFromLocalStorage(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const savedTasks = localStorage.getItem('tasks');
+      if (savedTasks) {
+        const tasks = JSON.parse(savedTasks);
+        this.tasksSignal.set(tasks);
+        this.tasksSubject.next(tasks);
+      }
     }
   }
 
   /**
-   * Deletes a task by its ID.
-   * @param taskId - The ID of the task to delete.
+   * Saves the current tasks to localStorage
    */
-  deleteTask(taskId: number): void {
-    this.tasks = this.tasks.filter((t) => t.id !== taskId);
-    this.tasksSubject.next(this.tasks); // Emit the updated list
+  private saveToLocalStorage(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('tasks', JSON.stringify(this.tasksSignal()));
+    }
+  }
+
+  /**
+   * Gets all tasks as an Observable
+   */
+  getTasks(): Observable<Task[]> {
+    return this.tasks$;
+  }
+
+  /**
+   * Gets all tasks as a signal
+   */
+  getTasksSignal() {
+    return this.tasksSignal;
+  }
+
+  /**
+   * Adds a new task
+   */
+  addTask(task: Omit<Task, 'id' | 'createdAt'>): Observable<Task> {
+    const newTask: Task = {
+      ...task,
+      id: Date.now().toString(),
+      createdAt: new Date(),
+      completed: false
+    };
+
+    // Update both signal and subject
+    const updatedTasks = [...this.tasksSignal(), newTask];
+    this.tasksSignal.set(updatedTasks);
+    this.tasksSubject.next(updatedTasks);
+    
+    this.saveToLocalStorage();
+    return of(newTask);
+  }
+
+  /**
+   * Updates an existing task
+   */
+  updateTask(updatedTask: Task): Observable<Task> {
+    const updatedTasks = this.tasksSignal().map(task => 
+      task.id === updatedTask.id ? updatedTask : task
+    );
+    
+    this.tasksSignal.set(updatedTasks);
+    this.tasksSubject.next(updatedTasks);
+    this.saveToLocalStorage();
+    
+    return of(updatedTask);
+  }
+
+  /**
+   * Toggles the completed status of a task
+   */
+  toggleTaskCompletion(taskId: string): Observable<Task> {
+    const taskToUpdate = this.tasksSignal().find(task => task.id === taskId);
+    if (!taskToUpdate) {
+      return of(null as unknown as Task);
+    }
+    
+    const updatedTask = { 
+      ...taskToUpdate, 
+      completed: !taskToUpdate.completed 
+    };
+    
+    return this.updateTask(updatedTask);
+  }
+
+  /**
+   * Deletes a task by ID
+   */
+  deleteTask(taskId: string): Observable<boolean> {
+    const updatedTasks = this.tasksSignal().filter(task => task.id !== taskId);
+    
+    this.tasksSignal.set(updatedTasks);
+    this.tasksSubject.next(updatedTasks);
+    this.saveToLocalStorage();
+    
+    return of(true);
   }
 }

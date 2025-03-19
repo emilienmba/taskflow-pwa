@@ -1,0 +1,63 @@
+<div class="task-list-container">
+    <!-- Header with title and separator -->
+    <div class="task-list-header">
+        <h5 class="task-list-title">My Tasks</h5>
+        <div class="title-separator"></div>
+    </div>
+
+    <!-- Filters and sort -->
+    <div class="controls-container">
+        <!-- Filter buttons -->
+        <div class="filter-section">
+            <h6 class="section-title">Filter</h6>
+            <div class="filter-buttons">
+                <button class="btn btn-filter" [class.active]="filter.value === 'all'" (click)="setFilter('all')">
+                    All
+                </button>
+                <button class="btn btn-filter" [class.active]="filter.value === 'active'" (click)="setFilter('active')">
+                    Active
+                </button>
+                <button class="btn btn-filter" [class.active]="filter.value === 'completed'" (click)="setFilter('completed')">
+                    Completed
+                </button>
+            </div>
+        </div>
+
+        <!-- Sort buttons -->
+        <div class="sort-section">
+            <h6 class="section-title">Sort</h6>
+            <div class="sort-buttons">
+                <button class="btn btn-sort" [class.active]="sort.value === 'default'" (click)="setSort('default')">
+                    Default
+                </button>
+                <button class="btn btn-sort" [class.active]="sort.value === 'dueDate'" (click)="setSort('dueDate')">
+                    Due Date
+                </button>
+                <button class="btn btn-sort" [class.active]="sort.value === 'priority'" (click)="setSort('priority')">
+                    Priority
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search input -->
+    <div class="search-container">
+        <input type="text" class="form-control search-input" placeholder="Search tasks..." [formControl]="searchControl">
+        <button class="btn btn-clear-search" *ngIf="searchControl.value" (click)="clearSearch()">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Task list -->
+    <div class="task-list">
+        @if (filteredTasks$ | async; as filteredTasks) { @if (filteredTasks.length > 0) { @for (task of filteredTasks; track task.id) {
+        <task-item [task]="task" (toggle)="onToggleTask($event)" (delete)="onDeleteTask($event)" (update)="onUpdateTask($event)">
+        </task-item>
+        } } @else {
+        <div class="no-tasks-message">
+            <i class="fa fa-tasks"></i>
+            <p>No tasks found. Add a new task to get started!</p>
+        </div>
+        } }
+    </div>
+</div>
