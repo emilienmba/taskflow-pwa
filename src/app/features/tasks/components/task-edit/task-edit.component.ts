@@ -4,7 +4,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, O
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../../../core/models/task.model';
 import { TaskService } from '../../../../core/services/task.service';
-import { DateTimeValidators } from '../../../../core/validators/dateTime.validator';
+import { DateTimeValidators } from '../../../../core/services/validators/dateTime.validator';
 
 declare var bootstrap: any; // Declare Bootstrap 5
 
