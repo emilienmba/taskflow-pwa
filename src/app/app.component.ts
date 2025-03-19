@@ -21,14 +21,15 @@ import { TaskListComponent } from './features/tasks/components/task-list/task-li
 })
 export class AppComponent {
   updateAvailable = false;
-  isOnline = true; // Default to true, will be updated in setupConnectivityMonitoring
+  isOnline = true;
+  offlineMode = false; // New property to track if we're operating in offline mode
 
   private themeService = inject(ThemeService);
   isDarkTheme = false;
 
   constructor(
     private swUpdate: SwUpdate,
-    @Inject(PLATFORM_ID) private platformId: Object // Inject PLATFORM_ID to check the environment
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.setupServiceWorkerUpdates();
     this.setupConnectivityMonitoring();
@@ -55,16 +56,26 @@ export class AppComponent {
    * Monitors device online/offline status
    */
   private setupConnectivityMonitoring(): void {
-    if (isPlatformBrowser(this.platformId)) { // Check if running in a browser
-      this.isOnline = navigator.onLine; // Set initial online status
+    if (isPlatformBrowser(this.platformId)) {
+      this.isOnline = navigator.onLine;
+      this.offlineMode = !navigator.onLine;
 
       window.addEventListener('online', () => {
         this.isOnline = true;
+        this.offlineMode = false;
+        console.log('App is online');
       });
       
       window.addEventListener('offline', () => {
         this.isOnline = false;
+        this.offlineMode = true;
+        console.log('App is offline');
       });
+      
+      // Check if app was loaded in offline mode
+      if (!navigator.onLine) {
+        this.offlineMode = true;
+      }
     }
   }
 

@@ -1,4 +1,3 @@
-// src/app/features/tasks/services/task.service.ts
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -15,8 +14,31 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<Task[]>([]);
   tasks$ = this.tasksSubject.asObservable();
 
+  // Track online status
+  private isOnline = true;
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.loadFromLocalStorage();
+    
+    if (isPlatformBrowser(this.platformId)) {
+      // Setup online/offline listeners
+      this.isOnline = navigator.onLine;
+      window.addEventListener('online', () => this.handleOnlineStatusChange(true));
+      window.addEventListener('offline', () => this.handleOnlineStatusChange(false));
+    }
+  }
+
+  /**
+   * Handles online/offline status changes
+   */
+  private handleOnlineStatusChange(isOnline: boolean): void {
+    this.isOnline = isOnline;
+    // Could trigger sync operations when coming back online
+    if (isOnline) {
+      console.log('Back online - data will be available');
+    } else {
+      console.log('Offline mode - using cached data');
+    }
   }
 
   /**
