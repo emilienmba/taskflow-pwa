@@ -96,7 +96,7 @@ import { DateTimeValidators } from '../../../../core/services/validators/dateTim
       position: fixed;
       top: 10px;
       right: 10px;
-      z-index: 1000; /* Ensure it's on top of other elements */
+      z-index: 9999; /* Ensure it's on top of other elements */
       width: 300px; /* Adjust as needed */
     }
   `]

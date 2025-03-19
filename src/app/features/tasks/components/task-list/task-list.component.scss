@@ -108,24 +108,22 @@
 .task-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    /* Deux colonnes */
     gap: 1rem;
-    /* Espacement entre les cartes */
     max-height: 70vh;
     overflow-y: auto;
     padding-right: 0.5rem;
     @media (max-width: 767px) {
         grid-template-columns: 1fr;
-        /* Une colonne sur mobile */
     }
 }
 
 task-item {
     width: 100%;
-    /* Assure que chaque carte occupe toute la largeur */
 }
 
 .no-tasks-message {
+    grid-column: 1 / -1;
+    /* Occupe toute la largeur de la grille */
     text-align: center;
     padding: 2rem;
     color: #6c757d;
