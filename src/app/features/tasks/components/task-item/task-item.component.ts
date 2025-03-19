@@ -1,4 +1,3 @@
-// src/app/features/tasks/components/task-item/task-item.component.ts
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Task } from '../../../../core/models/task.model';

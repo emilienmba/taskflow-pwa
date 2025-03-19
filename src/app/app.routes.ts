@@ -4,6 +4,6 @@ import { TaskListComponent } from './features/tasks/components/task-list/task-li
 
 export const routes: Routes = [
     { path: '', redirectTo: '/tasks', pathMatch: 'full' },
-    { path: 'tasks', component: TaskListComponent }, // Utilisation du composant de page de tâches
+    { path: 'tasks', component: TaskListComponent },
     { path: '**', redirectTo: '/tasks' }
 ];
