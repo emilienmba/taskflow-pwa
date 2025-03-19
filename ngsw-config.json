@@ -20,7 +20,7 @@
             "updateMode": "prefetch",
             "resources": {
                 "files": [
-                    "/assets/**",
+                    "/public/**",
                     "/*.(svg|cur|jpg|jpeg|png|webp|gif|otf|ttf|woff|woff2|ani)"
                 ]
             }
