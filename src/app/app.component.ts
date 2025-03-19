@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
@@ -19,10 +19,11 @@ import { TaskListComponent } from './features/tasks/components/task-list/task-li
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   updateAvailable = false;
   isOnline = true;
-  offlineMode = false; // New property to track if we're operating in offline mode
+  offlineMode = false;
+  offlineFallbackShown = false;
 
   private themeService = inject(ThemeService);
   isDarkTheme = false;
@@ -31,12 +32,15 @@ export class AppComponent {
     private swUpdate: SwUpdate,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.setupServiceWorkerUpdates();
-    this.setupConnectivityMonitoring();
-    
     this.themeService.theme$.subscribe(theme => {
       this.isDarkTheme = theme === 'dark';
     });
+  }
+
+  ngOnInit() {
+    this.setupServiceWorkerUpdates();
+    this.setupConnectivityMonitoring();
+    this.checkServiceWorkerStatus();
   }
 
   /**
@@ -44,11 +48,40 @@ export class AppComponent {
    */
   private setupServiceWorkerUpdates(): void {
     if (this.swUpdate.isEnabled) {
+      // Check for updates every 30 minutes
+      setInterval(() => {
+        this.swUpdate.checkForUpdate().then(() => {
+          console.log('Checking for updates');
+        }).catch(err => {
+          console.error('Error checking for updates:', err);
+        });
+      }, 30 * 60 * 1000);
+
       this.swUpdate.versionUpdates.pipe(
         filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY')
       ).subscribe(() => {
+        console.log('New version available!');
         this.updateAvailable = true;
       });
+    }
+  }
+
+  /**
+   * Check if the service worker is active
+   */
+  private checkServiceWorkerStatus(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+          if (registration) {
+            console.log('Service Worker is registered:', registration);
+          } else {
+            console.warn('No Service Worker registration found');
+          }
+        }).catch(err => {
+          console.error('Service Worker error:', err);
+        });
+      }
     }
   }
 
@@ -61,15 +94,29 @@ export class AppComponent {
       this.offlineMode = !navigator.onLine;
 
       window.addEventListener('online', () => {
+        console.log('App is back online');
         this.isOnline = true;
         this.offlineMode = false;
-        console.log('App is online');
+        // Trigger a reload to get fresh data
+        this.swUpdate.checkForUpdate();
       });
       
       window.addEventListener('offline', () => {
+        console.log('App is offline');
         this.isOnline = false;
         this.offlineMode = true;
-        console.log('App is offline');
+        
+        // Show offline fallback if app content is not available
+        setTimeout(() => {
+          const appRoot = document.querySelector('app-root');
+          if (appRoot && appRoot.children.length === 0) {
+            const fallback = document.getElementById('offline-fallback');
+            if (fallback) {
+              fallback.style.display = 'block';
+              this.offlineFallbackShown = true;
+            }
+          }
+        }, 1000);
       });
       
       // Check if app was loaded in offline mode
@@ -83,7 +130,14 @@ export class AppComponent {
    * Updates the application when a new version is available
    */
   updateApp(): void {
-    this.swUpdate.activateUpdate().then(() => document.location.reload());
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.activateUpdate().then(() => {
+        console.log('Update activated');
+        document.location.reload();
+      }).catch(err => {
+        console.error('Error activating update:', err);
+      });
+    }
   }
 
   toggleTheme(): void {
