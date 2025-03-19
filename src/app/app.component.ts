@@ -41,6 +41,21 @@ export class AppComponent implements OnInit {
     this.setupServiceWorkerUpdates();
     this.setupConnectivityMonitoring();
     this.checkServiceWorkerStatus();
+
+    // Préchargement des polices Font Awesome
+    const fontAwesomeLink = document.createElement('link');
+    fontAwesomeLink.rel = 'stylesheet';
+    fontAwesomeLink.href = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fontAwesomeLink);
+    
+    // Préchargement explicite des fichiers de police
+    const preloadWoff2 = document.createElement('link');
+    preloadWoff2.rel = 'preload';
+    preloadWoff2.href = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2';
+    preloadWoff2.as = 'font';
+    preloadWoff2.type = 'font/woff2';
+    preloadWoff2.crossOrigin = 'anonymous';
+    document.head.appendChild(preloadWoff2);
   }
 
   /**
