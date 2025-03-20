@@ -4,8 +4,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { Task } from '../../../../core/models/task.model';
-import { TaskService } from '../../../../core/services/task.service';
-import { DateTimeValidators } from '../../../../core/services/validators/dateTime.validator';
+import { TaskService } from '../../../../core/services/task/task.service';
+import { DateTimeValidators } from '../../../../core/validators/dateTime.validator';
 
 @Component({
     selector: 'task-form',

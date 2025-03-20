@@ -3,7 +3,7 @@ import { Component, inject, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
-import { ThemeService } from './core/services/theme.service';
+import { ThemeService } from './core/services/theme/theme.service';
 import { TaskFormComponent } from './features/tasks/components/task-form/task-form.component';
 import { TaskListComponent } from './features/tasks/components/task-list/task-list.component';
 

@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { Task } from '../../../../core/models/task.model';
-import { TaskService } from '../../../../core/services/task.service';
+import { TaskService } from '../../../../core/services/task/task.service';
 import { TaskItemComponent } from '../task-item/task-item.component';
 
 @Component({

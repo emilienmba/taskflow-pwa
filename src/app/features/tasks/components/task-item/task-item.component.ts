@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Task } from '../../../../core/models/task.model';
-import { TaskService } from '../../../../core/services/task.service';
+import { TaskService } from '../../../../core/services/task/task.service';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 
 declare var bootstrap: any;

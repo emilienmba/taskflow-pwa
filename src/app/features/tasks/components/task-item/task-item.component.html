@@ -16,17 +16,17 @@
     <div class="task-item-card">
         <div class="task-header">
             <div class="task-checkbox">
-                <input class="form-check-input" type="checkbox" [id]="'task-' + task.id" [checked]="task.completed" (change)="onToggle()">
+                <input class="form-check-input" data-tooltip-bottom="Complete" type="checkbox" [id]="'task-' + task.id" [checked]="task.completed" (change)="onToggle()">
                 <label class="form-check-label" [class.completed]="task.completed" [for]="'task-' + task.id">
                     {{ task.title }}
                 </label>
             </div>
 
             <div class="task-actions">
-                <button class="btn btn-edit" (click)="onEdit()">
+                <button class="btn btn-edit" (click)="onEdit()" data-tooltip-bottom="Edit">
                     <img src="assets/images/pen.png" alt="Update" width="14" height="14" style="vertical-align: middle;">
                 </button>
-                <button class="btn btn-delete" (click)="onConfirmDelete()">
+                <button class="btn btn-delete" (click)="onConfirmDelete()" data-tooltip-bottom="Delete">
                     <img src="assets/images/delete.png" alt="Delete" width="14" height="14" style="vertical-align: middle;">
                 </button>
             </div>

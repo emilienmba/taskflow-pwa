@@ -197,3 +197,42 @@ body.dark-theme {
         background-color: #343a40;
     }
 }
+
+// Style pour les infobulles en dessous
+[data-tooltip-bottom] {
+    position: relative;
+    cursor: pointer;
+    &:before,
+    &:after {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        pointer-events: none;
+    }
+    &:before {
+        content: attr(data-tooltip-bottom);
+        background-color: #454343;
+        color: #fff;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    &:after {
+        content: "";
+        // border: 5px solid transparent;
+        border-top-color: #454343;
+        z-index: 2;
+        top: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    &:hover:before,
+    &:hover:after {
+        opacity: 1;
+    }
+}

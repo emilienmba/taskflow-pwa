@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../../../core/models/task.model';
-import { TaskService } from '../../../../core/services/task.service';
-import { DateTimeValidators } from '../../../../core/services/validators/dateTime.validator';
+import { TaskService } from '../../../../core/services/task/task.service';
+import { DateTimeValidators } from '../../../../core/validators/dateTime.validator';
 
 declare var bootstrap: any; // Declare Bootstrap 5
 

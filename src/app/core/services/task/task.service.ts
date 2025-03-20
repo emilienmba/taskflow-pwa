@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Task } from '../models/task.model';
+import { Task } from '../../models/task.model';
 
 @Injectable({
   providedIn: 'root'
