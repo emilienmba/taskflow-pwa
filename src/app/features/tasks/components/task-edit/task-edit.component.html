@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="col">
-                            <label for="time" class="form-label">Time (optional)</label>
+                            <label for="time" class="form-label">Time</label>
                             <input type="time" class="form-control" id="time" formControlName="time" [disabled]="!editForm.get('dueDate')?.value" />
                             <div *ngIf="editForm.get('time')?.invalid && editForm.get('time')?.touched" class="text-danger">
                                 <div *ngIf="editForm.get('time')?.errors?.['invalidTime']">The combined date and time must be in the future.</div>

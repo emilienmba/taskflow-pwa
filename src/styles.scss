@@ -141,6 +141,9 @@ body.dark-theme {
                 color: var(--bs-primary);
             }
         }
+         ::placeholder {
+            color: #fff;
+        }
     }
     .task-list {
         &::-webkit-scrollbar-track {
@@ -180,5 +183,17 @@ body.dark-theme {
             color: #f8f9fa;
             border-color: #6c757d;
         }
+    }
+    p,
+    span,
+    h6,
+    h5,
+    small,
+    .fa-sun-o,
+    label {
+        color: #fff !important;
+    }
+    .modal-content {
+        background-color: #343a40;
     }
 }

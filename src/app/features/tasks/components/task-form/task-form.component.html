@@ -1,5 +1,77 @@
-<form (ngSubmit)="onSubmit()">
-    <input [(ngModel)]="task.title" name="title" placeholder="Title" required />
-    <textarea [(ngModel)]="task.description" name="description" placeholder="Description"></textarea>
-    <button type="submit">Add Task</button>
-</form>
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Add New Task</h5>
+
+        <!-- Fixed Top-Right Alert Container -->
+        <div class="alert-container">
+            @if (successMessage) {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ successMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            } @else if (errorMessage) {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            }
+        </div>
+
+        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+            <!-- Title Field -->
+            <div class="mb-3">
+                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="title" formControlName="title" [ngClass]="{ 'is-invalid': taskForm.get('title')?.invalid && taskForm.get('title')?.touched }">
+                <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="text-danger">
+                    <div *ngIf="taskForm.get('title')?.errors?.['required']">Title is required.</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="priority" class="form-label">Priority <span class="text-danger">*</span></label>
+                <select class="form-select" id="priority" formControlName="priority" [ngClass]="{ 'is-invalid': taskForm.get('priority')?.invalid && taskForm.get('priority')?.touched }">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <div *ngIf="taskForm.get('priority')?.invalid && taskForm.get('priority')?.touched" class="text-danger">
+                    Priority is required.
+                </div>
+            </div>
+
+            <!-- Description Field -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" formControlName="description" rows="2"></textarea>
+            </div>
+
+            <!-- Due Date Fields -->
+            <div class="row mb-3">
+
+                <div class="col">
+                    <label for="dueDate" class="form-label">Due Date</label>
+                    <input type="date" min={{minDate}} max={{maxDate}} class="form-control" id="dueDate" formControlName="dueDate" [ngClass]="{ 'is-invalid': taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched }">
+                    <div *ngIf="taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched" class="text-danger">
+                        <div *ngIf="taskForm.get('dueDate')?.errors?.['dateTooEarly']">Date cannot be in the past.</div>
+                        <div *ngIf="taskForm.get('dueDate')?.errors?.['dateTooLate']">Date cannot be more than one year in the future.</div>
+                    </div>
+                </div>
+
+                <!-- Optional Time Field -->
+
+                <div class="col">
+                    <label for="time" class="form-label">Time</label>
+                    <input type="time" class="form-control" id="time" formControlName="time" [ngClass]="{ 'is-invalid': taskForm.get('time')?.invalid && taskForm.get('time')?.touched }" [disabled]="!taskForm.get('dueDate')?.value">
+                    <div *ngIf="taskForm.get('time')?.invalid && taskForm.get('time')?.touched" class="text-danger">
+                        <div *ngIf="taskForm.get('time')?.errors?.['invalidTime']">The combined date and time must be in the future.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+                <i class="fa fa-plus me-1"></i> Add Task
+            </button>
+        </form>
+    </div>
+</div>
